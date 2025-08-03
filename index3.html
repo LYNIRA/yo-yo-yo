@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LYNIRA Spark - Interactive Companion Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica Neue, Arial, sans-serif; 
+            background: linear-gradient(135deg, #C3E0F9, #94D5D6);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 15px;
+            color: #4A3A5F;
+            width: 100%;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            padding: 0 10px;
+        }
+        
+        .navbar-logo {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 1.6rem;
+            color: #4A3A5F;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .navbar-logo i {
+            color: #F0C36B;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .navbar-menu a {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 1rem;
+            color: #4A3A5F;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 6px 4px;
+        }
+        
+        .navbar-menu a:hover {
+            color: #F0C36B;
+        }
+        
+        .navbar-toggle {
+            display: none;
+            font-size: 1.4rem;
+            color: #4A3A5F;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Activities Dropdown */
+        .activities-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            padding: 20px;
+            width: auto;
+            min-width: 320px;
+            max-width: 400px;
+            display: none;
+            flex-direction: column;
+            z-index: 1300;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            margin-top: 8px;
+        }
+        
+        .activities-dropdown:hover .dropdown-content,
+        .activities-dropdown.active .dropdown-content {
+            display: flex;
+            opacity: 1;
+            max-height: 500px;
+        }
+        
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .activity-item {
+            background: rgba(148, 213, 214, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        
+        .activity-preview {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 2px solid #F0C36B;
+        }
+        
+        .activity-info {
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .activity-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #4A3A5F;
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 1.1rem;
+        }
+        
+        .download-btn {
+            background: #F0C36B;
+            color: #4A3A5F;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 2px solid #4A3A5F;
+        }
+        
+        .download-btn:hover {
+            background: #f9d18f;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 600px;
+            background-image: url('https://i.imgur.com/LVCm6gN.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            margin: 0 auto 30px;
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .hero-overlay {
+            background: rgba(74, 58, 95, 0.6);
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+        }
+        
+        .hero h1 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+        
+        .hero .cta-button {
+            background: #F0C36B;
+            color: #4A3A5F;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid #4A3A5F;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hero .cta-button:hover {
+            background: #f9d18f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 2.5rem;
+            color: #4A3A5F;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header h1:after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background: #F0C36B;
+            border-radius: 2px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 15px auto 0;
+            color: #5a4a6f;
+        }
+        
+        /* Character Scroll Section */
+        #character-scroll {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #8B6B8E, #CABBE9);
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .character-scroll-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-width: 100%;
+            height: 100%;
+            background-image: url('https://i.imgur.com/QbzxC1R.png');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .character-container {
+            position: absolute;
+            top: 150px;
+            left: 0;
+            width: 100%;
+            height: 260px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            z-index: 3;
+            padding: 0 80px;
+            box-sizing: border-box;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .character-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .character-wrapper {
+            display: inline-block;
+            height: 100%;
+            white-space: nowrap;
+        }
+        
+        .character-item {
+            display: inline-block;
+            height: 100%;
+            margin: 0 20px;
+            vertical-align: bottom;
+            transition: transform 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .character {
+            height: 100%;
+            max-height: 230px;
+            filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.3));
+            transition: all 0.3s ease;
+        }
+        
+        .character-item:hover .character {
+            transform: translateY(-8px);
+            filter: drop-shadow(4px 12px 12px rgba(0,0,0,0.4));
+        }
+        
+        .character-item:hover {
+            transform: translateY(-4px);
+        }
+        
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            z-index: 20;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #4A3A5F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-arrow:hover {
+            background: #F0C36B;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .left-arrow {
+            left: 15px;
+        }
+        
+        .right-arrow {
+            right: 15px;
+        }
+        
+        .character-name-tag {
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #F0C36B;
+            color: #4A3A5F;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .character-item:hover .character-name-tag {
+            opacity: 1;
+        }
+        
+        .info-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .info-box h2 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            color: #4A3A5F;
+            margin-bottom: 12px;
+            font-size: 1.8rem;
+        }
+        
+        .info-box p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            color: #5a4a6f;
+        }
+        
+        .cta-button {
+            background: #F0C36B;
+            color: #4A3A5F;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid #4A3A5F;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            background: #f9d18f;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+        
+        /* Character Card Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            max-width: 360px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            color: #4A3A5F;
+        }
+        
+        .modal-content video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: none;
+        }
+        
+        .modal-content h2 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .modal-content p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #4A3A5F;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            background: #F0C36B;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1100;
+        }
+        
+        .close:hover {
+            background: #f9d18f;
+            transform: scale(1.1);
+        }
+        
+        /* Character Bios Section */
+        #character-bios {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        #character-bios .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .bio-cards {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .bio-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            width: 240px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .bio-card h3 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            color: #4A3A5F;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .bio-card video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            loading: lazy;
+        }
+        
+        .bio-card:hover video {
+            transform: scale(1.03);
+        }
+        
+        /* Play Zone Sections */
+        .play-section {
+            margin: 50px 0;
+            text-align: center;
+        }
+        
+        .play-zone-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            max-width: 850px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .play-content {
+            padding: 30px;
+        }
+        
+        .play-section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .play-section-title h2 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            font-size: 2.2rem;
+            color: #4A3A5F;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .play-section-title p {
+            font-size: 1.1rem;
+            color: #5a4a6f;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        
+        /* Emotion Explorer Section */
+        #emotion-explorer {
+            margin-bottom: 50px;
+        }
+        
+        .emotion-picker {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .emotion {
+            background: #F0C36B;
+            border: 2px solid #4A3A5F;
+            padding: 12px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4A3A5F;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+        
+        .emotion:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            background: #f9d18f;
+        }
+        
+        .emotion.anger { background: #E3A9B3; }
+        .emotion.love { background: #A8D5A3; }
+        .emotion.sadness { background: #95AABD; }
+        .emotion.fear { background: #8B6B8E; }
+        
+        .response-area {
+            background: rgba(148, 213, 214, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #94D5D6;
+            transition: all 0.3s ease;
+        }
+        
+        #emotion-response {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            color: #4A3A5F;
+            padding: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .companion-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            loading: lazy;
+        }
+        
+        /* Xylophone Section */
+        .xylophone-container {
+            background: rgba(139, 107, 142, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .xylophone-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            color: #4A3A5F;
+            font-weight: 600;
+        }
+        
+        .tutorial-controls {
+            background: rgba(240, 195, 107, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #F0C36B;
+        }
+        
+        .tutorial-controls h3 {
+            font-family: 'Baloo Bhaijaan 2', cursive, sans-serif;
+            color: #4A3A5F;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .song-selection {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .song-btn {
+            background: #8B6B8E;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .song-btn:hover {
+            background: #A88DAB;
+            transform: translateY(-2px);
+        }
+        
+        .song-btn.active {
+            background: #F0C36B;
+            color: #4A3A5F;
+            box-shadow: 0 0 0 2px #8B6B8E;
+        }
+        
+        .tutorial-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .tutorial-btn {
+            background: #4A3A5F;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .tutorial-btn:hover {
+            background: #5a4a6f;
+            transform: translateY(-2px);
+        }
+        
+        .tutorial-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .tutorial-progress {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+            color: #4A3A5F;
+        }
+        
+        .progress-bar {
+            flex-grow: 1;
+            max-width: 280px;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #F0C36B;
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .xylophone {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 220px;
+            gap: 8px;
+            margin: 15px auto;
+            max-width: 650px;
+        }
+        
+        .bar {
+            width: 45px;
+            background: #8B6B8E;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 8px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .bar:hover {
+            transform: scale(1.05);
+        }
+        
+        .bar:active {
+            transform: scale(0.98);
+        }
+        
+        .bar::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: #F0C36B;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .bar.active {
+            box-shadow: 0 0 15px 4px #F0C36B;
+            transform: scale(1.1);
+        }
+        
+        .bar.highlighted {
+            box-shadow: 0 0 15px 8px #A8D5A3;
+            transform: scale(1.1);
+            animation: pulse-highlight 1s infinite alternate;
+        }
+        
+        @keyframes pulse-highlight {
+            from { box-shadow: 0 0 12px 4px #A8D5A3; }
+            to { box-shadow: 0 0 20px 8px #A8D5A3; }
+        }
+        
+        .bar:nth-child(1) { height: 200px; background: #8B6B8E; } /* C */
+        .bar:nth-child(2) { height: 180px; background: #95AABD; } /* D */
+        .bar:nth-child(3) { height: 160px; background: #C3E0F9; } /* E */
+        .bar:nth-child(4) { height: 140px; background: #94D5D6; } /* F */
+        .bar:nth-child(5) { height: 120px; background: #A8D5A3; } /* G */
+        .bar:nth-child(6) { height: 100px; background: #CABBE9; } /* A */
+        .bar:nth-child(7) { height: 80px; background: #E3A9B3; } /* B */
+        
+        .xylophone-instruction-box {
+            background: rgba(240, 195, 107, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            border: 2px dashed #F0C36B;
+        }
+        
+        .xylophone-instruction-box p {
+            margin-bottom: 8px;
+        }
+        
+        .song-info {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 1.1rem;
+            color: #4A3A5F;
+            font-weight: 600;
+            height: 25px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .song-info.visible {
+            opacity: 1;
+        }
+        
+        .music-icon {
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.4); opacity: 0; }
+        }
+        
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: floatUp 2.5s ease-in forwards;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #5a4a6f;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #4A3A5F;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #F0C36B;
+        }
+        
+        /* Activity grid adjustments */
+        @media (min-width: 900px) {
+            .dropdown-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .dropdown-content {
+                max-width: 600px;
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .hero {
+                height: 500px;
+            }
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .character-container {
+                padding: 0 70px;
+                top: 130px;
+                height: 240px;
+            }
+            .character {
+                max-height: 210px;
+            }
+            #character-scroll {
+                height: 400px;
+            }
+            .bio-card {
+                width: 220px;
+            }
+            .bio-card h3 {
+                font-size: 1.3rem;
+            }
+            .dropdown-content {
+                max-width: 90%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+                flex-direction: column;
+                position: relative;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 15px;
+                gap: 12px;
+            }
+            .navbar-menu.active {
+                display: flex;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .activities-dropdown .dropdown-content {
+                position: static;
+                width: 100%;
+                max-width: 100%;
+                display: none;
+                margin-top: 8px;
+                box-shadow: none;
+                padding: 12px;
+            }
+            .activities-dropdown.active .dropdown-content {
+                display: flex;
+                opacity: 1;
+                max-height: 500px;
+            }
+            .dropdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero {
+                height: 450px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .hero-overlay {
+                padding: 25px;
+            }
+            #character-scroll {
+                height: 360px;
+            }
+            .character-container {
+                padding: 0 50px;
+                top: 120px;
+                height: 220px;
+            }
+            .character {
+                max-height: 190px;
+            }
+            .scroll-arrow {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            .character-name-tag {
+                bottom: 4px;
+                font-size: 0.9rem;
+                padding: 4px 10px;
+            }
+            .bio-card {
+                width: 200px;
+            }
+            .bio-card h3 {
+                font-size: 1.2rem;
+            }
+            .song-selection {
+                flex-direction: column;
+                align-items: center;
+            }
+            .tutorial-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .tutorial-btn {
+                width: 100%;
+                max-width: 180px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-logo {
+                font-size: 1.4rem;
+            }
+            .navbar-toggle {
+                font-size: 1.2rem;
+            }
+            .navbar-menu {
+                padding: 12px;
+            }
+            .navbar-menu a {
+                font-size: 0.9rem;
+            }
+            .hero {
+                height: 400px;
+            }
+            .hero h1 {
+                font-size: 1.4rem;
+            }
+            .hero p {
+                font-size: 0.85rem;
+            }
+            .hero-overlay {
+                padding: 15px;
+            }
+            #character-scroll {
+                height: 320px;
+            }
+            .character-container {
+                padding: 0 30px;
+                top: 100px;
+                height: 200px;
+            }
+            .character {
+                max-height: 170px;
+            }
+            .character-item {
+                margin: 0 15px;
+            }
+            .scroll-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1rem;
+            }
+            .character-name-tag {
+                bottom: 5px;
+                font-size: 0.85rem;
+                padding: 3px 8px;
+            }
+            .bio-card {
+                width: 100%;
+                max-width: 260px;
+            }
+            .bio-card h3 {
+                font-size: 1.1rem;
+            }
+            .dropdown-grid {
+                grid-template-columns: 1fr;
+            }
+            .activity-preview {
+                height: 100px;
+            }
+            .play-section-title h2 { font-size: 1.5rem; }
+            .xylophone {
+                height: 160px;
+                gap: 3px;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0 8px;
+            }
+            .bar {
+                width: 28px;
+                min-width: 28px;
+                font-size: 0.85rem;
+            }
+            .bar:nth-child(1) { height: 140px; }
+            .bar:nth-child(2) { height: 130px; }
+            .bar:nth-child(3) { height: 120px; }
+            .bar:nth-child(4) { height: 110px; }
+            .bar:nth-child(5) { height: 100px; }
+            .bar:nth-child(6) { height: 90px; }
+            .bar:nth-child(7) { height: 80px; }
+            .emotion {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            .dropdown-content {
+                min-width: 100%;
+            }
+            #emotion-response { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body id="top">
+    <nav class="navbar">
+        <div class="container">
+            <a href="#top" class="navbar-logo"><i class="fas fa-sparkles"></i> LYNIRA Spark</a>
+            <div class="navbar-menu" id="navbar-menu">
+                <a href="#top">Home</a>
+                <a href="#character-scroll">Characters</a>
+                <a href="#character-bios">Bios</a>
+                <a href="#emotion-explorer">Emotions</a>
+                <a href="#xylophone-section">Xylophone</a>
+                <div class="activities-dropdown">
+                    <a href="#" class="dropdown-toggle">Activities <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <h3 style="text-align: center; margin-bottom: 15px; color: #4A3A5F; font-family: 'Baloo Bhaijaan 2', cursive;">Download Fun Activities!</h3>
+                        <div class="dropdown-grid">
+                            <div class="activity-item">
+                                <img src="https://i.imgur.com/yhBXkyV.png" alt="Emotion Explorer activity" class="activity-preview" loading="lazy">
+                                <div class="activity-info">
+                                    <div class="activity-title">Emotion Explorer</div>
+                                    <a href="#" class="download-btn" onclick="alert('Coming soon!')">Download <i class="fas fa-download"></i></a>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <img src="https://i.imgur.com/q8bMr9F.png" alt="Kindlewood Maze activity" class="activity-preview" loading="lazy">
+                                <div class="activity-info">
+                                    <div class="activity-title">Kindlewood Maze</div>
+                                    <a href="#" class="download-btn" onclick="alert('Coming soon!')">Download <i class="fas fa-download"></i></a>
+                                </div>
+                            </div>
+                            <!-- NEW MAZE ACTIVITY -->
+                            <div class="activity-item">
+                                <img src="https://i.imgur.com/gEp3Jyf.png" alt="Forest Maze Challenge" class="activity-preview" loading="lazy">
+                                <div class="activity-info">
+                                    <div class="activity-title">Forest Maze Challenge</div>
+                                    <a href="#" class="download-btn" onclick="downloadMaze()">Download <i class="fas fa-download"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-overlay">
+            <h1>Welcome to the world of Kindlewood.</h1>
+            <p>Here, four brave little bears—each with their own big feelings—explore the wonder, mystery, and magic of growing up. Through stories, laughter, and gentle adventures, they help your child name their emotions, build courage, and discover their place in the world.</p>
+            <a href="#character-scroll" class="cta-button">Meet the Characters <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Meet Our Companions</h1>
+            <p>Scroll to discover the magical characters that grow with your child</p>
+        </div>
+        
+        <section id="character-scroll">
+            <div class="character-scroll-background"></div>
+            <div class="character-container">
+                <div class="character-wrapper">
+                    <div class="character-item" data-name="Ash" tabindex="0" aria-label="View Ash's profile">
+                        <img src="https://i.imgur.com/2epoJxo.png" alt="Ash character" class="character" loading="lazy">
+                        <div class="character-name-tag">Ash</div>
+                    </div>
+                    <div class="character-item" data-name="Luma" tabindex="0" aria-label="View Luma's profile">
+                        <img src="https://i.imgur.com/26mWalu.png" alt="Luma character" class="character" loading="lazy">
+                        <div class="character-name-tag">Luma</div>
+                    </div>
+                    <div class="character-item" data-name="Drift" tabindex="0" aria-label="View Drift's profile">
+                        <img src="https://i.imgur.com/0g9b1Nc.png" alt="Drift character" class="character" loading="lazy">
+                        <div class="character-name-tag">Drift</div>
+                    </div>
+                    <div class="character-item" data-name="Echo" tabindex="0" aria-label="View Echo's profile">
+                        <img src="https://i.imgur.com/ZVJJWqo.png" alt="Echo character" class="character" loading="lazy">
+                        <div class="character-name-tag">Echo</div>
+                    </div>
+                </div>
+            </div>
+            <button class="scroll-arrow left-arrow" aria-label="Scroll left"><i class="fas fa-chevron-left"></i></button>
+            <button class="scroll-arrow right-arrow" aria-label="Scroll right"><i class="fas fa-chevron-right"></i></button>
+        </section>
+        
+        <div class="info-box">
+            <h2>Characters That Grow With Your Child</h2>
+            <p>Each companion adapts to your child's emotional journey, learning and evolving alongside them. Through interactive stories, emotional guidance, and playful activities, these characters become trusted friends that help children understand their feelings and navigate the world.</p>
+            <p>Click the arrows to explore each character, and hover or tap any companion to learn their name.</p>
+            <a href="#" class="cta-button">Choose Your Companion <i class="fas fa-heart"></i></a>
+        </div>
+        
+        <section id="character-bios">
+            <div class="header">
+                <h1>Character Bios</h1>
+                <p>Dive deeper into the lives of our Kindlewood companions</p>
+            </div>
+            <div class="bio-cards">
+                <div class="bio-card">
+                    <h3>Ash</h3>
+                    <video autoplay loop muted src="https://cdn.midjourney.com/video/db4d380f-aa44-49dd-81c6-b51e1004484b/3.mp4" loading="lazy" aria-label="Ash character video"></video>
+                </div>
+                <div class="bio-card">
+                    <h3>Luma</h3>
+                    <video autoplay loop muted src="https://cdn.midjourney.com/video/2844d56e-25b3-4159-9bb3-3beda9b7abca/3.mp4" loading="lazy" aria-label="Luma character video"></video>
+                </div>
+                <div class="bio-card">
+                    <h3>Drift</h3>
+                    <video autoplay loop muted src="https://cdn.midjourney.com/video/c5485783-0c00-4daf-97db-2b9d330bce00/1.mp4" loading="lazy" aria-label="Drift character video"></video>
+                </div>
+                <div class="bio-card">
+                    <h3>Echo</h3>
+                    <video autoplay loop muted src="https://cdn.midjourney.com/video/d974dc88-3749-4b8d-b1b8-dbf643f02456/3.mp4" loading="lazy" aria-label="Echo character video"></video>
+                </div>
+            </div>
+        </section>
+        
+        <section id="emotion-explorer" class="play-section">
+            <div class="play-zone-container">
+                <div class="play-content">
+                    <div class="play-section-title">
+                        <h2>Emotion Explorer</h2>
+                        <p>Connect with your companion through feelings and play!</p>
+                    </div>
+                    <div class="emotion-picker">
+                        <button class="emotion anger" id="anger-btn" aria-label="Select Anger emotion"><i class="fas fa-fire"></i> Anger</button>
+                        <button class="emotion love" id="love-btn" aria-label="Select Love emotion"><i class="fas fa-heart"></i> Love</button>
+                        <button class="emotion sadness" id="sadness-btn" aria-label="Select Sadness emotion"><i class="fas fa-cloud-rain"></i> Sadness</button>
+                        <button class="emotion fear" id="fear-btn" aria-label="Select Fear emotion"><i class="fas fa-ghost"></i> Fear</button>
+                    </div>
+                    <div class="response-area">
+                        <img src="https://i.imgur.com/26mWalu.png" alt="Luma companion" class="companion-image" id="companion-img" loading="lazy">
+                        <p id="emotion-response">Select an emotion to hear from your companion</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="xylophone-section" class="play-section">
+            <div class="play-zone-container">
+                <div class="play-content">
+                    <div class="play-section-title">
+                        <h2>Kindlewood Xylophone</h2>
+                        <p>Create magical music with your companions</p>
+                    </div>
+                    <div class="xylophone-container">
+                        <div class="tutorial-controls">
+                            <h3>Learn to Play a Song!</h3>
+                            <div class="song-selection">
+                                <button class="song-btn" data-song="twinkle" aria-label="Select Twinkle Twinkle song">Twinkle Twinkle</button>
+                                <button class="song-btn" data-song="happy" aria-label="Select Happy Birthday song">Happy Birthday</button>
+                                <button class="song-btn" data-song="mary" aria-label="Select Mary Had a Little Lamb song">Mary Had a Lamb</button>
+                            </div>
+                            <div class="tutorial-buttons">
+                                <button class="tutorial-btn" id="start-tutorial" aria-label="Start tutorial"><i class="fas fa-play"></i> Start Tutorial</button>
+                                <button class="tutorial-btn" id="next-note" disabled aria-label="Next note"><i class="fas fa-forward"></i> Next Note</button>
+                                <button class="tutorial-btn" id="reset-tutorial" aria-label="Reset tutorial"><i class="fas fa-redo"></i> Reset</button>
+                            </div>
+                            <div class="tutorial-progress">
+                                <div class="progress-text">Progress:</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                                <div class="progress-text" id="progress-text">0/0</div>
+                            </div>
+                        </div>
+                        <div class="xylophone">
+                            <div class="bar" data-note="C" aria-label="Play C note">C</div>
+                            <div class="bar" data-note="D" aria-label="Play D note">D</div>
+                            <div class="bar" data-note="E" aria-label="Play E note">E</div>
+                            <div class="bar" data-note="F" aria-label="Play F note">F</div>
+                            <div class="bar" data-note="G" aria-label="Play G note">G</div>
+                            <div class="bar" data-note="A" aria-label="Play A note">A</div>
+                            <div class="bar" data-note="B" aria-label="Play B note">B</div>
+                        </div>
+                        <div class="xylophone-instruction-box">
+                            <p><strong>How to Play:</strong></p>
+                            <p>1. Tap any colored bar to play a musical note</p>
+                            <p>2. Try creating a simple melody by tapping different bars</p>
+                            <p>3. Use the tutorial to learn popular songs step-by-step</p>
+                        </div>
+                        <p class="song-info" id="song-info"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="footer">
+            <p>© 2023 LYNIRA Spark. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">About Kindlewood</a>
+            </div>
+        </div>
+    </div>
+    
+    <div id="character-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal" aria-label="Close modal">&times;</span>
+            <video id="modal-video" autoplay loop muted loading="lazy"></video>
+            <img id="modal-image" alt="Character Image" loading="lazy">
+            <h2 id="modal-name"></h2>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+    
+    <script>
+        // Define closeModal in global scope
+        function closeModal() {
+            const modal = document.getElementById('character-modal');
+            const modalVideo = document.getElementById('modal-video');
+            const modalImage = document.getElementById('modal-image');
+            modal.style.display = 'none';
+            if (modalVideo) {
+                modalVideo.pause();
+                modalVideo.src = '';
+            }
+            if (modalImage) {
+                modalImage.style.display = 'none';
+                modalImage.src = '';
+            }
+        }
+
+        // Function to download maze
+        function downloadMaze() {
+            alert('Downloading the Forest Maze Challenge! This feature would download the maze image in a real implementation.');
+            // In a real implementation, this would download the maze image
+        }
+
+        (function() {
+            // Navbar Toggle
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarMenu = document.getElementById('navbar-menu');
+            navbarToggle.addEventListener('click', () => {
+                navbarMenu.classList.toggle('active');
+                const isActive = navbarMenu.classList.contains('active');
+                navbarToggle.setAttribute('aria-expanded', isActive);
+                if (isActive) {
+                    navbarMenu.querySelectorAll('a').forEach(link => {
+                        link.setAttribute('tabindex', '0');
+                    });
+                } else {
+                    navbarMenu.querySelectorAll('a').forEach(link => {
+                        link.setAttribute('tabindex', '-1');
+                    });
+                }
+            });
+
+            // Activities Dropdown Toggle for Mobile
+            const activitiesDropdown = document.querySelector('.activities-dropdown');
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            dropdownToggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    activitiesDropdown.classList.toggle('active');
+                }
+            });
+
+            // Character Scroll
+            document.querySelector('.left-arrow').addEventListener('click', () => {
+                document.querySelector('.character-container').scrollBy({ left: -250, behavior: 'smooth' });
+            });
+            document.querySelector('.right-arrow').addEventListener('click', () => {
+                document.querySelector('.character-container').scrollBy({ left: 250, behavior: 'smooth' });
+            });
+
+            // Keyboard Navigation for Scroll Arrows
+            document.querySelectorAll('.scroll-arrow').forEach(arrow => {
+                arrow.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        arrow.click();
+                    }
+                });
+            });
+
+            // Character Modal
+            const modal = document.getElementById('character-modal');
+            const modalVideo = document.getElementById('modal-video');
+            const modalImage = document.getElementById('modal-image');
+            const modalName = document.getElementById('modal-name');
+            const modalDescription = document.getElementById('modal-description');
+            const closeModalBtn = document.getElementById('close-modal');
+            
+            // Add event listener to close button
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside content
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+
+            const characters = {
+                Ash: {
+                    video: 'https://cdn.midjourney.com/video/db4d380f-aa44-49dd-81c6-b51e1004484b/3.mp4',
+                    image: 'https://i.imgur.com/2epoJxo.png',
+                    description: 'Ash is the loudest cub in Kindlewood — stomping, roaring, and absolutely not sharing the last blueberry pancake. He\'s bold, fiery, and hates being told "not now."\nAsh doesn\'t mean to break things (okay, sometimes he does), but when his feelings burst out like a volcano, he needs space to breathe — or bounce on his grizzly trampoline. Once he cools down, he\'s the best defender in the forest and fiercely loyal to his friends.\nAsh\'s superpower? He can turn "mad" into "I care a LOT" when given the chance.'
+                },
+                Luma: {
+                    video: 'https://cdn.midjourney.com/video/2844d56e-25b3-4159-9bb3-3beda9b7abca/3.mp4',
+                    image: 'https://i.imgur.com/26mWalu.png',
+                    description: 'Luma is the heart of the group — bouncy, bright, and always ready with a big bear hug (sometimes too big). She loves tea parties, surprise dances, and saying "I love you" for no reason at all.\nShe gets her feelings hurt easily when someone forgets her name in a game, but she\'s just as quick to forgive with a giggle and a hand squeeze. Luma believes every cub is special and that love can fix almost anything (except maybe spilled glitter).\nLuma\'s superpower? Her hugs can change the weather.'
+                },
+                Drift: {
+                    video: 'https://cdn.midjourney.com/video/c5485783-0c00-4daf-97db-2b9d330bce00/1.mp4',
+                    image: 'https://i.imgur.com/0g9b1Nc.png',
+                    description: 'Drift is the soft-hearted polar bear cub who feels everything — deeply. He\'s quiet, thoughtful, and often found staring at the clouds or hugging his favorite blanket. Drift loves being with the other cubs but sometimes needs a little more time to warm up or recover after something feels too big.\nHe\'s the first to notice when someone\'s left out, and though his voice is small, his heart is huge. Drift can get overwhelmed easily, especially when the world feels loud, but he always finds his way back with a deep breath and a kind word.\nDrift\'s superpower? He helps others slow down and feel what\'s real.'
+                },
+                Echo: {
+                    video: 'https://cdn.midjourney.com/video/d974dc88-3749-4b8d-b1b8-dbf643f02456/3.mp4',
+                    image: 'https://i.imgur.com/ZVJJWqo.png',
+                    description: 'Echo is the wide-eyed panda who notices everything. He\'s a little cautious, a little quiet, and a little shaky when the wind howls or a door creaks open. But when Echo trusts you, he\'s the best secret keeper in the forest.\nHe likes hiding spots, whisper-quiet stories, and always wants to know what\'s going to happen next. Echo might panic when plans change, but with a gentle paw or a flashlight in hand, he\'s braver than he believes.\nEcho\'s superpower? He listens so carefully he can hear what no one else says.'
+                }
+            };
+
+            document.querySelectorAll('.character-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const name = item.getAttribute('data-name');
+                    if (characters[name]) {
+                        modalVideo.src = characters[name].video;
+                        modalImage.style.display = 'none';
+                        modalVideo.style.display = 'block';
+                        modalName.textContent = name;
+                        modalDescription.textContent = characters[name].description || '';
+                        modal.style.display = 'flex';
+                        modalVideo.play().catch(error => console.error('Video play error:', error));
+                    }
+                });
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        item.click();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.bio-card video').forEach(video => {
+                video.addEventListener('click', () => {
+                    const name = video.parentElement.querySelector('h3').textContent;
+                    if (characters[name]) {
+                        modalVideo.style.display = 'none';
+                        modalImage.style.display = 'block';
+                        modalImage.src = characters[name].image;
+                        modalName.textContent = name;
+                        modalDescription.textContent = characters[name].description || '';
+                        modal.style.display = 'flex';
+                    }
+                });
+            });
+
+            // Emotion Responses
+            const emotionResponses = {
+                anger: {
+                    text: "Ash roars: I feel the fire too! Let's channel it into something strong together!",
+                    image: "https://i.imgur.com/2epoJxo.png"
+                },
+                love: {
+                    text: "Luma beams: My heart's so full! Let's share love with a big hug and dance!",
+                    image: "https://i.imgur.com/26mWalu.png"
+                },
+                sadness: {
+                    text: "Drift sighs: It's okay to feel blue. I'm here with you, let's rest together.",
+                    image: "https://i.imgur.com/0g9b1Nc.png"
+                },
+                fear: {
+                    text: "Echo whispers: I feel that shiver too. Let's face it together, step by step.",
+                    image: "https://i.imgur.com/ZVJJWqo.png"
+                }
+            };
+
+            document.getElementById('anger-btn').addEventListener('click', () => handleEmotion('anger'));
+            document.getElementById('love-btn').addEventListener('click', () => handleEmotion('love'));
+            document.getElementById('sadness-btn').addEventListener('click', () => handleEmotion('sadness'));
+            document.getElementById('fear-btn').addEventListener('click', () => handleEmotion('fear'));
+
+            function handleEmotion(emotion) {
+                const response = emotionResponses[emotion];
+                emotionResponseEl.textContent = response.text;
+                companionImgEl.src = response.image;
+                companionImgEl.style.transform = 'scale(1.1)';
+                const responseArea = document.querySelector('.response-area');
+                responseArea.style.transform = 'scale(1.02)';
+                responseArea.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                setTimeout(() => {
+                    responseArea.style.transform = 'scale(1)';
+                    responseArea.style.boxShadow = 'none';
+                    companionImgEl.style.transform = 'scale(1)';
+                }, 300);
+            }
+
+            const emotionResponseEl = document.getElementById('emotion-response');
+            const companionImgEl = document.getElementById('companion-img');
+            
+            // FIXED XYLOPHONE FUNCTIONALITY
+            // Audio context and note frequencies
+            let audioContext = null;
+            const noteFrequencies = {
+                'C': 261.63,
+                'D': 293.66,
+                'E': 329.63,
+                'F': 349.23,
+                'G': 392.00,
+                'A': 440.00,
+                'B': 493.88
+            };
+
+            // Tutorial songs
+            const tutorialSongs = {
+                twinkle: {
+                    name: "Twinkle Twinkle Little Star",
+                    notes: ['C', 'C', 'G', 'G', 'A', 'A', 'G', 'F', 'F', 'E', 'E', 'D', 'D', 'C']
+                },
+                happy: {
+                    name: "Happy Birthday",
+                    notes: ['C', 'C', 'D', 'C', 'F', 'E', 'C', 'C', 'D', 'C', 'G', 'F']
+                },
+                mary: {
+                    name: "Mary Had a Little Lamb",
+                    notes: ['E', 'D', 'C', 'D', 'E', 'E', 'E', 'D', 'D', 'D', 'E', 'G', 'G']
+                }
+            };
+
+            // Xylophone elements
+            const startTutorialBtn = document.getElementById('start-tutorial');
+            const nextNoteBtn = document.getElementById('next-note');
+            const resetTutorialBtn = document.getElementById('reset-tutorial');
+            const songBtns = document.querySelectorAll('.song-btn');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const songInfoEl = document.getElementById('song-info');
+            const bars = document.querySelectorAll('.bar');
+            
+            // Tutorial state
+            let tutorialActive = false;
+            let currentSong = null;
+            let currentNoteIndex = 0;
+            let audioContextInitialized = false;
+            
+            // Initialize audio context on first interaction
+            function initAudioContext() {
+                if (!audioContextInitialized) {
+                    try {
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        audioContextInitialized = true;
+                    } catch (e) {
+                        console.error('Web Audio API not supported');
+                        return false;
+                    }
+                }
+                return true;
+            }
+            
+            // Play a note with proper audio context handling
+            function playNote(frequency) {
+                if (!initAudioContext()) return;
+                
+                // Resume audio context if suspended
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        playNoteAfterResume(frequency);
+                    });
+                } else {
+                    playNoteAfterResume(frequency);
+                }
+            }
+            
+            function playNoteAfterResume(frequency) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = 0.3;
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Set up volume envelope
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.8);
+            }
+            
+            // Bar click handlers
+            bars.forEach(bar => {
+                bar.addEventListener('click', function() {
+                    const note = this.getAttribute('data-note');
+                    playNote(noteFrequencies[note]);
+                    
+                    // Visual feedback
+                    this.classList.add('active');
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 200);
+                    
+                    // Handle tutorial note if active
+                    if (tutorialActive) {
+                        handleTutorialNote(note);
+                    }
+                });
+            });
+            
+            // Tutorial functions
+            function startTutorial() {
+                if (!currentSong) return;
+                
+                tutorialActive = true;
+                currentNoteIndex = 0;
+                startTutorialBtn.disabled = true;
+                nextNoteBtn.disabled = false;
+                highlightCurrentNote();
+                updateProgress();
+                
+                songInfoEl.textContent = `Now learning: ${currentSong.name}`;
+                songInfoEl.classList.add('visible');
+            }
+            
+            function handleTutorialNote(note) {
+                if (!tutorialActive) return;
+                
+                const currentNote = currentSong.notes[currentNoteIndex];
+                if (note === currentNote) {
+                    // Correct note
+                    currentNoteIndex++;
+                    if (currentNoteIndex >= currentSong.notes.length) {
+                        // Song completed
+                        tutorialActive = false;
+                        songInfoEl.innerHTML = `<span class="music-icon">🎉</span> Great job! You completed ${currentSong.name}!`;
+                        nextNoteBtn.disabled = true;
+                    } else {
+                        highlightCurrentNote();
+                    }
+                    updateProgress();
+                } else {
+                    // Incorrect note
+                    songInfoEl.innerHTML = `<span class="music-icon">🤔</span> Try again! Play the highlighted note: ${currentSong.notes[currentNoteIndex]}`;
+                }
+            }
+            
+            function highlightCurrentNote() {
+                // Remove all highlights
+                bars.forEach(bar => {
+                    bar.classList.remove('highlighted');
+                });
+                
+                // Highlight the current note
+                const currentNote = currentSong.notes[currentNoteIndex];
+                const currentBar = document.querySelector(`.bar[data-note="${currentNote}"]`);
+                if (currentBar) {
+                    currentBar.classList.add('highlighted');
+                }
+            }
+            
+            function updateProgress() {
+                const progress = (currentNoteIndex / currentSong.notes.length) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `${currentNoteIndex}/${currentSong.notes.length}`;
+            }
+            
+            function resetTutorial() {
+                tutorialActive = false;
+                currentNoteIndex = 0;
+                startTutorialBtn.disabled = false;
+                nextNoteBtn.disabled = true;
+                progressFill.style.width = '0%';
+                progressText.textContent = '0/0';
+                songInfoEl.classList.remove('visible');
+                
+                // Remove highlights
+                bars.forEach(bar => {
+                    bar.classList.remove('highlighted');
+                });
+            }
+            
+            // Button event listeners
+            startTutorialBtn.addEventListener('click', startTutorial);
+            nextNoteBtn.addEventListener('click', () => {
+                if (tutorialActive && currentSong) {
+                    const currentNote = currentSong.notes[currentNoteIndex];
+                    playNote(noteFrequencies[currentNote]);
+                    currentNoteIndex++;
+                    
+                    if (currentNoteIndex >= currentSong.notes.length) {
+                        // Song completed
+                        tutorialActive = false;
+                        songInfoEl.innerHTML = `<span class="music-icon">🎉</span> Great job! You completed ${currentSong.name}!`;
+                        nextNoteBtn.disabled = true;
+                    } else {
+                        highlightCurrentNote();
+                    }
+                    updateProgress();
+                }
+            });
+            
+            resetTutorialBtn.addEventListener('click', resetTutorial);
+            
+            // Song selection
+            songBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    songBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const songId = btn.getAttribute('data-song');
+                    currentSong = tutorialSongs[songId];
+                    startTutorialBtn.disabled = false;
+                    
+                    resetTutorial();
+                });
+            });
+            
+            // Initialize with first song selected
+            if (songBtns.length > 0) {
+                songBtns[0].click();
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#' || href.length <= 1) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        window.scrollTo({
+                            top: target.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
